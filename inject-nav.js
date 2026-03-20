@@ -1,5 +1,5 @@
 // ============================================================
-//  inject-nav.js — drop this on every page, don't edit it
+//  inject-nav.js — drop this on every page
 //  It reads SITE_PAGES from pages.js and auto-builds:
 //    • the sidebar nav links
 //    • the page cards grid on the home page

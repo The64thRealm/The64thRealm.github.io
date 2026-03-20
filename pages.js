@@ -7,7 +7,7 @@
 //    desc     : a short description shown in the card
 //
 //  For external links, add:
-//    external : true   ← opens in a new tab, skipped in sidebar
+//    external : true   opens in a new tab, skipped in sidebar
 // ============================================================
 
 const SITE_PAGES = [
@@ -23,6 +23,13 @@ const SITE_PAGES = [
     emoji: "🐦",
     name: "twitter",
     desc: "find me on twitter!",
+    external: true
+  },
+  {
+    href: "https://itch.io/profile/the64threalm",
+    emoji: "🎮",
+    name: "itch",
+    desc: "play my games!",
     external: true
   },
 ];
