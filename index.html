@@ -326,50 +326,48 @@
 
 </div><!-- /.wrapper -->
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>  
-  // ── Auto last-updated from GitHub
-  const GITHUB_USER = "The64thRealm";
-  const GITHUB_REPO = "The64thRealm.github.io";
-  const GITHUB_FILE = "index.html";
-
-  fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits?path=${GITHUB_FILE}&per_page=1`)
-          .then(r => r.json())
-          .then(data => {
-            const date = new Date(data[0].commit.author.date);
-            document.getElementById("last-updated").textContent = date.toLocaleDateString("en-US", {
-              month: "long", day: "numeric", year: "numeric"
-            });
-          })
-          .catch(() => {
-            document.getElementById("last-updated").textContent = "recently";
-          });
-</script>
-
-<script src="pages.js"></script>
-<script src="inject-nav.js"></script>
+<script src="pages.js" defer></script>
+<script src="inject-nav.js" defer></script>
 <script>
-  const hearts = ['♡', '♡', '♡', '♡', '♡'];
-  const count = 22;
-  for (let i = 0; i < count; i++) {
-    const el = document.createElement('span');
-    el.className = 'heart';
-    el.textContent = '♡';
-    const size = 10 + Math.random() * 18;
-    const left = Math.random() * 100;
-    const duration = 8 + Math.random() * 14;
-    const delay = -(Math.random() * duration);
-    const drift = (Math.random() - 0.5) * 80;
-    const opacity = 0.08 + Math.random() * 0.12;
-    el.style.cssText = `
-      left: ${left}vw;
-      bottom: -2rem;
-      font-size: ${size}px;
-      opacity: ${opacity};
-      animation-duration: ${duration}s;
-      animation-delay: ${delay}s;
-      --drift: ${drift}px;
-    `;
-    document.body.appendChild(el);
+  // ── Floating hearts ──────────────────────────────────────
+  try {
+    const count = 22;
+    for (let i = 0; i < count; i++) {
+      const el = document.createElement('span');
+      el.className = 'heart';
+      el.textContent = '♡';
+      const size = 10 + Math.random() * 18;
+      const left = Math.random() * 100;
+      const duration = 8 + Math.random() * 14;
+      const delay = -(Math.random() * duration);
+      const drift = (Math.random() - 0.5) * 80;
+      const opacity = 0.08 + Math.random() * 0.12;
+      el.style.cssText = `left:${left}vw;bottom:-2rem;font-size:${size}px;opacity:${opacity};animation-duration:${duration}s;animation-delay:${delay}s;--drift:${drift}px;`;
+      document.body.appendChild(el);
+    }
+  } catch(e) {}
+
+  try {
+    // ── Auto last-updated from GitHub
+    const GITHUB_USER = "The64thRealm";
+    const GITHUB_REPO = "The64thRealm.github.io";
+    const GITHUB_FILE = "index.html";
+
+    fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits?path=${GITHUB_FILE}&per_page=1`)
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        const el = document.getElementById("last-updated");
+        if (!el) return;
+        const date = new Date(data[0].commit.author.date);
+        el.textContent = date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+      })
+      .catch(() => {
+        const el = document.getElementById("last-updated");
+        if (el) el.textContent = "recently";
+      });
+  } catch(e) {
+    const el = document.getElementById("last-updated");
+    if (el) el.textContent = "recently";
   }
 </script>
 </body>
