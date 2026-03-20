@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Realm's little corner ♡</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Shrikhand&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:        #fff0f5;
+      --panel:     #fff5f8;
+      --sidebar:   #ffe4ef;
+      --border:    #f9b8d0;
+      --text:      #5a2d40;
+      --muted:     #b07088;
+      --accent:    #f06292;
+      --accent2:   #ff8fb1;
+      --accent3:   #ffc2d4;
+      --link:      #d63870;
+      --shadow:    rgba(240,98,146,0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255,182,208,0.35) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(255,143,177,0.25) 0%, transparent 40%);
+      color: var(--text);
+      font-family: 'Nunito', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    .heart {
+      position: fixed;
+      color: #f06292;
+      pointer-events: none;
+      z-index: 0;
+      animation: floatUp linear infinite;
+      user-select: none;
+    }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(0) translateX(0); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(-100vh) translateX(var(--drift, 0px)); opacity: 0; }
+    }
+
+    a { color: var(--link); text-decoration: underline dotted; }
+    a:hover { color: var(--accent); }
+
+    /* ── WRAPPER ── */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    /* ── TITLE BAR ── */
+    .titlebar {
+      background: var(--accent);
+      color: #ffd0de;
+      border-radius: 14px 14px 0 0;
+      padding: 0.5rem 1rem;
+      font-family: 'Shrikhand', cursive;
+      font-size: 1rem;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 20px var(--shadow);
+      animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    .titlebar-dots { display: flex; gap: 5px; }
+    .titlebar-dots span {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .titlebar-dots span:nth-child(1) { background: #ff8fb1; }
+    .titlebar-dots span:nth-child(2) { background: #ffc2d4; }
+    .titlebar-dots span:nth-child(3) { background: rgba(255,255,255,0.5); }
+
+    /* ── MAIN WINDOW ── */
+    .window {
+      background: var(--panel);
+      border: 2px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 18px 18px;
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 8px 32px var(--shadow);
+      animation: popIn 0.5s 0.05s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      background: var(--sidebar);
+      border-right: 2px solid var(--border);
+      width: 160px;
+      flex-shrink: 0;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .sidebar-avatar {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent2), var(--accent3));
+      border: 3px solid var(--border);
+      margin: 0 auto 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.1rem;
+    }
+
+    .sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .sidebar nav a {
+      display: block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.87rem;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* ── CONTENT ── */
+    .content {
+      flex: 1;
+      padding: 1.75rem 1.75rem 2rem;
+      min-width: 0;
+    }
+
+    .content h1 {
+      font-family: 'Shrikhand', cursive;
+      font-size: 2.1rem;
+      color: var(--accent);
+      margin-bottom: 0.05rem;
+      letter-spacing: 0.02em;
+    }
+
+    .subtitle {
+      font-size: 0.87rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .intro {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      font-size: 0.93rem;
+      margin-bottom: 1.6rem;
+      box-shadow: 0 2px 10px var(--shadow);
+    }
+
+    .section-heading {
+      font-family: 'Shrikhand', cursive;
+      font-size: 1.05rem;
+      color: var(--accent);
+      margin-bottom: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* ── PAGE CARDS GRID ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+      gap: 0.8rem;
+      margin-bottom: 1.75rem;
+    }
+    
+    .card {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem 0.95rem;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .card:hover {
+      transform: translateY(-4px) rotate(-0.4deg);
+      box-shadow: 0 8px 24px var(--shadow);
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .card-emoji { font-size: 1.75rem; line-height: 1; }
+    .card-name  { font-weight: 800; font-size: 0.93rem; color: var(--accent); }
+    .card-desc  { font-size: 0.78rem; color: var(--muted); line-height: 1.45; }
+
+    /* ── STATUS ── */
+    .status {
+      background: #fff;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 0.75rem 1.1rem;
+      font-size: 0.83rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 2px 8px var(--shadow);
+    }
+
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #6bcb77;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(107,203,119,0.25);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(107,203,119,0.25); }
+      50%       { box-shadow: 0 0 0 6px rgba(107,203,119,0.1); }
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.97) translateY(8px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 580px) {
+      .window { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 2px solid var(--border);
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        align-items: center;
+        padding: 0.85rem 1rem;
+      }
+      .sidebar-avatar { width: 46px; height: 46px; font-size: 1.3rem; margin: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- title bar -->
+  <div class="titlebar">
+    <div class="titlebar-dots"><span></span><span></span><span></span></div>
+    ♡ <span style="color: #fff;">Realm's</span> little corner of the internet ♡
+  </div>
+
+  <!-- main window -->
+  <div class="window">
+
+    <!-- sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-avatar">🌸</div>
+      <nav id="site-nav">
+        <!-- links are injected by inject-nav.js -->
+      </nav>
+
+
+    </aside>
+
+    <!-- main content -->
+    <main class="content">
+      <h1>hello!! ♡</h1>
+      <p class="subtitle">welcome to my website ( ˘ ³˘)♥</p>
+
+      <div class="intro">
+        ✦ hi! i'm <strong>Realm</strong>! this is my personal little site —
+        feel free to look around~ ♡<br /><br />
+        you can reach me at <a href="mailto:the64threalm@gmail.com">the64threalm@gmail.com</a>
+      </div>
+
+      <div class="section-heading">♡ links</div>
+
+      <div class="cards" id="page-cards">
+        <!-- cards are injected by inject-nav.js -->
+      </div>
+
+      <div class="status">
+        <div class="status-dot"></div>
+        <span>currently: <strong>Making a bill splitter to replace my gsheets one</strong> — updated <span id="last-updated">...</span></span>
+      </div>
+    </main>
+
+  </div><!-- /.window -->
+
+</div><!-- /.wrapper -->
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>  
+  // ── Auto last-updated from GitHub
+  const GITHUB_USER = "The64thRealm";
+  const GITHUB_REPO = "The64thRealm.github.io";
+  const GITHUB_FILE = "index.html";
+
+  fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits?path=${GITHUB_FILE}&per_page=1`)
+          .then(r => r.json())
+          .then(data => {
+            const date = new Date(data[0].commit.author.date);
+            document.getElementById("last-updated").textContent = date.toLocaleDateString("en-US", {
+              month: "long", day: "numeric", year: "numeric"
+            });
+          })
+          .catch(() => {
+            document.getElementById("last-updated").textContent = "recently";
+          });
+</script>
+
+<script src="pages.js"></script>
+<script src="inject-nav.js"></script>
+<script>
+  const hearts = ['♡', '♡', '♡', '♡', '♡'];
+  const count = 22;
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('span');
+    el.className = 'heart';
+    el.textContent = '♡';
+    const size = 10 + Math.random() * 18;
+    const left = Math.random() * 100;
+    const duration = 8 + Math.random() * 14;
+    const delay = -(Math.random() * duration);
+    const drift = (Math.random() - 0.5) * 80;
+    const opacity = 0.08 + Math.random() * 0.12;
+    el.style.cssText = `
+      left: ${left}vw;
+      bottom: -2rem;
+      font-size: ${size}px;
+      opacity: ${opacity};
+      animation-duration: ${duration}s;
+      animation-delay: ${delay}s;
+      --drift: ${drift}px;
+    `;
+    document.body.appendChild(el);
+  }
+</script>
+</body>
+</html>
