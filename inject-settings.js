@@ -3,7 +3,10 @@
 //  It reads SITE_PAGES from pages.js and auto-builds:
 //    • the sidebar nav links
 //    • the page cards grid on the home page
+//    • the site settings
 // ============================================================
+
+document.getElementById('status-text').textContent = SITE_STATUS;
 
 (function () {
   // ── Sidebar nav links ──────────────────────────────────────
@@ -35,19 +38,33 @@
 
   // ── Page cards (home page only) ───────────────────────────
   // Looks for <div id="page-cards"> and fills it with cards.
-  const grid = document.getElementById("page-cards");
-  if (grid && typeof SITE_PAGES !== "undefined") {
+  const pageGrid = document.getElementById("page-cards");
+  if (pageGrid && typeof SITE_PAGES !== "undefined") {
     SITE_PAGES.forEach(page => {
       const a = document.createElement("a");
       a.href = page.href;
       a.className = "card";
-      if (page.external) a.target = "_blank";
       a.innerHTML = `
         <span class="card-emoji">${page.emoji}</span>
         <span class="card-name">${page.name}</span>
         <p class="card-desc">${page.desc}</p>
       `;
-      grid.appendChild(a);
+      pageGrid.appendChild(a);
+    });
+  }
+
+  const externalLinksGrid = document.getElementById("external-cards");
+  if (externalLinksGrid && typeof EXTERNAL_LINKS !== "undefined") {
+    EXTERNAL_LINKS.forEach(page => {
+      const a = document.createElement("a");
+      a.href = page.href;
+      a.className = "card";
+      a.innerHTML = `
+        <span class="card-emoji">${page.emoji}</span>
+        <span class="card-name">${page.name}</span>
+        <p class="card-desc">${page.desc}</p>
+      `;
+      externalLinksGrid.appendChild(a);
     });
   }
 })();

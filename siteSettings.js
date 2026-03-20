@@ -1,35 +1,45 @@
 // ============================================================
-//  pages.js — edit this file to add or remove pages
-//  Each page needs:
-//    href     : path to the page  (e.g. "about/index.html")
-//    emoji    : any emoji you like
-//    name     : the page's name shown in the card & sidebar
-//    desc     : a short description shown in the card
-//
-//  For external links, add:
-//    external : true   opens in a new tab, skipped in sidebar
+//  siteSettings.js — edit this file to change site settings
 // ============================================================
 
+// misc site settings
+
+const SITE_STATUS = "1.15 aassg filter maybe"
+
+// page definitions
+
+//  Each page needs:
+//  href
+//  emoji
+//  name
+//  desc
+
 const SITE_PAGES = [
+  {
+    href: "billSplitter/billsplitter.html",
+    emoji: "💸",
+    name: "bill splitter",
+    desc: "split your bills easily"
+  },
+];
+
+const EXTERNAL_LINKS = [
   {
     href: "https://open.spotify.com/playlist/2aaT1ZkAe3sKOkkcVsdGr8",
     emoji: "🎵",
     name: "music",
     desc: "playlist of songs i love",
-    external: true
   },
   {
     href: "https://twitter.com/the64threalm",
     emoji: "🐦",
     name: "twitter",
     desc: "find me on twitter!",
-    external: true
   },
   {
     href: "https://itch.io/profile/the64threalm",
     emoji: "🎮",
     name: "itch",
     desc: "play my games!",
-    external: true
   },
-];
+]

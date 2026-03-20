@@ -310,15 +310,21 @@
         you can reach me at <a href="mailto:the64threalm@gmail.com">the64threalm@gmail.com</a>
       </div>
 
-      <div class="section-heading">♡ links</div>
+      <div class="section-heading">♡ pages</div>
 
       <div class="cards" id="page-cards">
         <!-- cards are injected by inject-nav.js -->
       </div>
 
+      <div class="section-heading">♡ links</div>
+
+      <div class="cards" id="external-cards">
+        <!-- cards are injected by inject-nav.js -->
+      </div>
+      
       <div class="status">
         <div class="status-dot"></div>
-        <span>currently: <strong>Making a bill splitter to replace my gsheets one</strong> — updated <span id="last-updated">...</span></span>
+        <span>currently: <strong id="status-text"></strong> — updated <span id="last-updated">...</span></span>
       </div>
     </main>
 
@@ -326,27 +332,10 @@
 
 </div><!-- /.wrapper -->
 
-<script src="pages.js" defer></script>
-<script src="inject-nav.js" defer></script>
+<script src="siteSettings.js" defer></script>
+<script src="inject-settings.js" defer></script>
+<script src="hearts.js"></script>
 <script>
-  // ── Floating hearts ──────────────────────────────────────
-  try {
-    const count = 22;
-    for (let i = 0; i < count; i++) {
-      const el = document.createElement('span');
-      el.className = 'heart';
-      el.textContent = '♡';
-      const size = 10 + Math.random() * 18;
-      const left = Math.random() * 100;
-      const duration = 8 + Math.random() * 14;
-      const delay = -(Math.random() * duration);
-      const drift = (Math.random() - 0.5) * 80;
-      const opacity = 0.08 + Math.random() * 0.12;
-      el.style.cssText = `left:${left}vw;bottom:-2rem;font-size:${size}px;opacity:${opacity};animation-duration:${duration}s;animation-delay:${delay}s;--drift:${drift}px;`;
-      document.body.appendChild(el);
-    }
-  } catch(e) {}
-
   try {
     // ── Auto last-updated from GitHub
     const GITHUB_USER = "The64thRealm";

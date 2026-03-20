@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>bill splitter ♡</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Shrikhand&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #fff0f5; --panel: #fff5f8; --sidebar: #ffe4ef;
+  --border: #f9b8d0; --text: #5a2d40; --muted: #b07088;
+  --accent: #f06292; --accent2: #ff8fb1; --accent3: #ffc2d4; --white: #ffffff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);background-image:radial-gradient(circle at 10% 20%,rgba(255,182,208,0.35) 0%,transparent 40%),radial-gradient(circle at 90% 80%,rgba(255,143,177,0.25) 0%,transparent 40%);color:var(--text);font-family:'Nunito',sans-serif;font-size:15px;line-height:1.6;min-height:100vh;padding:1.5rem 1rem 4rem;}
+.heart{position:fixed;color:#f06292;pointer-events:none;z-index:0;animation:floatUp linear infinite;user-select:none;}
+@keyframes floatUp{0%{transform:translateY(0) translateX(0);opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{transform:translateY(-100vh) translateX(var(--drift,0px));opacity:0;}}
+h1{font-family:'Shrikhand',cursive;color:var(--accent);font-size:2rem;margin-bottom:0.2rem;}
+.subtitle{color:var(--muted);font-size:0.88rem;margin-bottom:1rem;}
+@keyframes popIn{from{opacity:0;transform:scale(0.97) translateY(8px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.header{max-width:1100px;margin:0 auto 1rem;position:relative;z-index:1;animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;}
+.layout{display:grid;grid-template-columns:1fr 340px;gap:1.25rem;max-width:1100px;margin:0 auto;position:relative;z-index:1;animation:popIn 0.5s 0.08s cubic-bezier(0.34,1.56,0.64,1) both;}
+@media(max-width:800px){.layout{grid-template-columns:1fr;}}
+.back-link{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.82rem;font-weight:700;color:var(--muted);text-decoration:none;margin-bottom:0.5rem;}
+.back-link:hover{color:var(--accent);}
+#readonly-banner{position:relative;z-index:1;}
+
+.panel{background:var(--white);border:2px solid var(--border);border-radius:16px;padding:1.25rem 1.25rem 1rem;margin-bottom:1rem;}
+.panel-title{font-family:'Shrikhand',cursive;font-size:1rem;color:var(--accent);margin-bottom:0.85rem;display:flex;align-items:center;gap:0.4rem;}
+
+.loc-card{background:var(--white);border:2px solid var(--border);border-radius:16px;margin-bottom:1rem;overflow:hidden;}
+.loc-header{background:var(--sidebar);padding:0.65rem 1.1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--border);}
+.loc-name-input{font-family:'Shrikhand',cursive;font-size:1rem;color:var(--accent);background:transparent;border:none;border-bottom:1.5px dashed var(--border);border-radius:0;padding:0.1rem 0.2rem;min-width:80px;outline:none;}
+.loc-name-input:focus{border-bottom-color:var(--accent);}
+.loc-body{padding:1rem 1.1rem 0.85rem;}
+.loc-section{margin-bottom:1.1rem;}
+.loc-section-label{font-size:0.73rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.45rem;}
+
+/* emoji picker */
+.emoji-btn{font-size:1.2rem;cursor:pointer;background:transparent;border:1.5px solid transparent;border-radius:8px;padding:0.1rem 0.25rem;line-height:1;transition:border-color 0.15s;}
+.emoji-btn:hover{border-color:var(--border);}
+.emoji-picker{position:absolute;z-index:100;background:var(--white);border:2px solid var(--border);border-radius:14px;padding:0.6rem;display:flex;flex-wrap:wrap;gap:0.25rem;width:220px;box-shadow:0 8px 24px rgba(240,98,146,0.15);}
+.emoji-picker span{font-size:1.25rem;cursor:pointer;padding:0.2rem;border-radius:6px;line-height:1;}
+.emoji-picker span:hover{background:var(--sidebar);}
+.emoji-wrap{position:relative;}
+
+input[type=text],input[type=number],select{font-family:'Nunito',sans-serif;font-size:0.88rem;color:var(--text);background:var(--panel);border:1.5px solid var(--border);border-radius:8px;padding:0.3rem 0.55rem;outline:none;transition:border-color 0.15s;}
+input[type=text]:focus,input[type=number]:focus,select:focus{border-color:var(--accent);}
+.input-row{display:flex;gap:0.5rem;align-items:center;margin-bottom:0.5rem;}
+
+button{font-family:'Nunito',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;border:none;border-radius:8px;padding:0.4rem 0.85rem;transition:opacity 0.15s,transform 0.1s;}
+button:active{transform:scale(0.97);}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{opacity:0.88;}
+.btn-ghost{background:transparent;color:var(--accent);border:1.5px solid var(--border);}
+.btn-ghost:hover{border-color:var(--accent);}
+.btn-danger{background:transparent;color:#e05;border:none;padding:0.2rem 0.4rem;font-size:0.8rem;opacity:0.55;}
+.btn-danger:hover{opacity:1;}
+.btn-sm{padding:0.25rem 0.6rem;font-size:0.78rem;}
+
+.friends-list{display:flex;flex-wrap:wrap;gap:0.45rem;margin-bottom:0.7rem;}
+.friend-chip{display:flex;align-items:center;gap:0.3rem;background:var(--sidebar);border:1.5px solid var(--border);border-radius:99px;padding:0.2rem 0.7rem;font-size:0.84rem;font-weight:700;}
+.friend-chip .remove{cursor:pointer;color:var(--muted);font-size:0.72rem;}
+.friend-chip .remove:hover{color:#e05;}
+
+.items-table{width:100%;border-collapse:collapse;margin-bottom:0.4rem;}
+.items-table th{font-size:0.71rem;color:var(--muted);font-weight:800;text-align:left;padding:0.25rem 0.35rem;border-bottom:1.5px solid var(--border);}
+.items-table td{padding:0.32rem 0.35rem;vertical-align:middle;}
+.items-table tr:not(:last-child) td{border-bottom:1px solid var(--border);}
+.item-name-input{min-width:80px;width:100%;}
+.item-price-input{width:62px;}
+.friend-checks{display:flex;flex-wrap:wrap;gap:0.22rem;}
+.friend-check{display:flex;align-items:center;gap:0.2rem;font-size:0.75rem;white-space:nowrap;}
+.friend-check input[type=checkbox]{accent-color:var(--accent);width:13px;height:13px;}
+.select-all-btn{font-size:0.69rem;color:var(--accent);cursor:pointer;text-decoration:underline dotted;background:none;border:none;padding:0;font-family:'Nunito',sans-serif;font-weight:700;}
+.overflow-x{overflow-x:auto;}
+
+.fee-card{background:var(--panel);border:1.5px solid var(--border);border-radius:12px;margin-bottom:0.55rem;overflow:hidden;}
+.fee-main{display:grid;grid-template-columns:1fr 80px 120px 120px auto;gap:0.4rem;align-items:center;padding:0.55rem 0.7rem;}
+@media(max-width:620px){.fee-main{grid-template-columns:1fr 70px 1fr 1fr auto;}}
+.fee-applies{border-top:1px solid var(--border);padding:0.45rem 0.7rem;display:flex;flex-wrap:wrap;align-items:center;gap:0.4rem;}
+.fee-applies-label{font-size:0.72rem;font-weight:800;color:var(--muted);white-space:nowrap;}
+.fee-item-check{display:flex;align-items:center;gap:0.2rem;font-size:0.76rem;}
+.fee-item-check input[type=checkbox]{accent-color:var(--accent);width:13px;height:13px;}
+.applies-all-btn{font-size:0.69rem;color:var(--accent);cursor:pointer;text-decoration:underline dotted;background:none;border:none;padding:0;font-family:'Nunito',sans-serif;font-weight:700;}
+
+/* summary */
+.summary-panel{position:sticky;top:1rem;}
+.person-block{background:var(--panel);border:1.5px solid var(--border);border-radius:12px;padding:0.75rem 0.9rem;margin-bottom:0.55rem;}
+.person-name{font-weight:800;font-size:0.92rem;margin-bottom:0.3rem;color:var(--accent);display:flex;justify-content:space-between;align-items:center;}
+.copy-btn{font-size:0.7rem;font-weight:700;color:var(--muted);cursor:pointer;background:none;border:1px solid var(--border);border-radius:6px;padding:0.1rem 0.4rem;}
+.copy-btn:hover{color:var(--accent);border-color:var(--accent);}
+.person-line{display:flex;justify-content:space-between;font-size:0.79rem;color:var(--muted);padding:0.07rem 0;}
+.person-line.indent{padding-left:0.65rem;font-size:0.76rem;}
+.person-line.loc-heading{font-weight:800;font-size:0.77rem;color:var(--text);margin-top:0.3rem;}
+.split-count{font-size:0.68rem;color:var(--accent3);margin-left:0.25rem;font-weight:400;}
+.person-total{display:flex;justify-content:space-between;font-weight:800;font-size:0.92rem;border-top:1.5px solid var(--border);margin-top:0.3rem;padding-top:0.3rem;}
+.grand-total{background:var(--accent);color:#fff;border-radius:12px;padding:0.78rem 1rem;display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:1rem;}
+.subtotal-bar{display:flex;justify-content:space-between;font-size:0.82rem;color:var(--muted);padding:0.22rem 0 0.5rem;border-bottom:1.5px solid var(--border);margin-bottom:0.65rem;}
+.empty{color:var(--muted);font-size:0.82rem;font-style:italic;padding:0.25rem 0;}
+
+/* action bar */
+.action-bar{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem;}
+
+/* toast */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--text);color:#fff;padding:0.55rem 1.1rem;border-radius:99px;font-size:0.84rem;font-weight:700;opacity:0;transition:opacity 0.2s;pointer-events:none;z-index:999;}
+.toast.show{opacity:1;}
+
+/* readonly banner */
+.readonly-banner{background:var(--sidebar);border:2px solid var(--border);border-radius:12px;padding:0.7rem 1rem;margin-bottom:1rem;font-size:0.85rem;display:flex;align-items:center;gap:0.5rem;}
+
+/* confirm dialog */
+.dialog-overlay{position:fixed;inset:0;background:rgba(90,45,64,0.35);z-index:200;display:flex;align-items:center;justify-content:center;}
+.dialog{background:var(--white);border:2px solid var(--border);border-radius:18px;padding:1.5rem 1.75rem;max-width:340px;width:90%;text-align:center;}
+.dialog h2{font-family:'Shrikhand',cursive;color:var(--accent);font-size:1.2rem;margin-bottom:0.5rem;}
+.dialog p{font-size:0.88rem;color:var(--muted);margin-bottom:1.1rem;}
+.dialog-btns{display:flex;gap:0.6rem;justify-content:center;}
+.btn-red{background:#e05;color:#fff;border:none;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="../index.html" class="back-link">← back home</a>
+  <h1>bill splitter ♡</h1>
+  <p class="subtitle">sayonara google sheets spam</p>
+</div>
+
+<div id="readonly-banner" style="display:none;max-width:1100px;margin:0 auto 1rem;">
+  <div class="readonly-banner">
+    👁️ <strong>viewing a shared bill</strong> — this is read-only. <a href="?" style="color:var(--accent);">start your own</a>
+  </div>
+</div>
+
+<div class="layout">
+  <div>
+    <div class="panel">
+      <div class="panel-title">🧑‍🤝‍🧑 people</div>
+      <div class="friends-list" id="friends-list"></div>
+      <div class="input-row" id="friend-add-row">
+        <input type="text" id="friend-input" placeholder="add a name..." style="max-width:175px;" onkeydown="if(event.key==='Enter')addFriend()"/>
+        <button class="btn-primary btn-sm" onclick="addFriend()">+ add</button>
+      </div>
+    </div>
+
+    <div id="locations-container"></div>
+
+    <div class="panel" id="add-loc-panel" style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
+      <span style="font-family:'Shrikhand',cursive;color:var(--accent);">📍</span>
+      <input type="text" id="location-input" placeholder="add a location..." style="flex:1;min-width:140px;" onkeydown="if(event.key==='Enter')addLocation()"/>
+      <button class="btn-primary btn-sm" onclick="addLocation()">+ add location</button>
+    </div>
+  </div>
+
+  <div class="summary-panel">
+    <div class="panel">
+      <div class="panel-title">💸 summary</div>
+      <div class="action-bar" id="action-bar" style="display:none;">
+        <button class="btn-ghost btn-sm" onclick="shareLink()">🔗 share link</button>
+        <button class="btn-ghost btn-sm" onclick="exportCSV()">⬇ export CSV</button>
+        <button class="btn-ghost btn-sm" onclick="copyShort()">📋 copy totals</button>
+        <button class="btn-ghost btn-sm" onclick="copyDetailed()">📋 copy detailed</button>
+        <button class="btn-ghost btn-sm" onclick="showClearDialog()" style="color:#e05;border-color:#ffc2c2;">🗑 clear all</button>
+      </div>
+      <div id="summary-content"><p class="empty">add people and a location to get started</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="dialog-overlay" id="clear-dialog" style="display:none;" onclick="if(event.target===this)hideClearDialog()">
+  <div class="dialog">
+    <h2>clear everything?</h2>
+    <p>this will remove all people, locations, items, and fees. it can't be undone!</p>
+    <div class="dialog-btns">
+      <button class="btn-ghost" onclick="hideClearDialog()">cancel</button>
+      <button class="btn-red" onclick="clearAll()">yes, clear all</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let friends = [];
+let locations = [];
+let nextId = 1;
+let readOnly = false;
+
+const EMOJIS = ['📍','🍜','🍕','🍣','🍔','🌮','🍱','🍛','🥗','🍺','☕','🛒','🛍️','🏪','🏬','💊','⛽','🎬','🎮','🎵','🌸','✨','🏠','🚗','✈️'];
+
+// ── TOAST ─────────────────────────────────────────────
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ── EMOJI PICKER ──────────────────────────────────────
+let openPickerId = null;
+function toggleEmojiPicker(locId) {
+  const existing = document.getElementById('epicker-' + locId);
+  if (existing) { existing.remove(); openPickerId = null; return; }
+  // close any other open picker
+  document.querySelectorAll('.emoji-picker').forEach(p => p.remove());
+  openPickerId = locId;
+  const wrap = document.getElementById('ewrap-' + locId);
+  const picker = document.createElement('div');
+  picker.className = 'emoji-picker';
+  picker.id = 'epicker-' + locId;
+  EMOJIS.forEach(e => {
+    const sp = document.createElement('span');
+    sp.textContent = e;
+    sp.title = e;
+    sp.onclick = () => { setLocEmoji(locId, e); picker.remove(); openPickerId = null; };
+    picker.appendChild(sp);
+  });
+  wrap.appendChild(picker);
+}
+document.addEventListener('click', e => {
+  if (openPickerId !== null && !e.target.closest('.emoji-wrap')) {
+    document.querySelectorAll('.emoji-picker').forEach(p => p.remove());
+    openPickerId = null;
+  }
+});
+function setLocEmoji(locId, emoji) {
+  const loc = locations.find(l => l.id === locId);
+  if (loc) { loc.emoji = emoji; renderLocations(); renderSummary(); }
+}
+
+// ── FRIENDS ───────────────────────────────────────────
+function addFriend() {
+  if (readOnly) return;
+  const inp = document.getElementById('friend-input');
+  const name = inp.value.trim();
+  if (!name) return;
+  friends.push({id:nextId++, name});
+  inp.value = '';
+  render();
+}
+function removeFriend(id) {
+  if (readOnly) return;
+  friends = friends.filter(f => f.id !== id);
+  locations.forEach(loc => loc.items.forEach(it => { it.friendIds = it.friendIds.filter(fid => fid !== id); }));
+  render();
+}
+
+// ── LOCATIONS ─────────────────────────────────────────
+function addLocation() {
+  if (readOnly) return;
+  const inp = document.getElementById('location-input');
+  const name = inp.value.trim();
+  if (!name) return;
+  const itemId = nextId++;
+  const loc = {id:nextId++, name, emoji:'📍', items:[{id:itemId, name:'', price:'', friendIds:[]}], fees:[{id:nextId++, name:'', amount:'', isPercent:false, split:'prop', itemIds:[itemId]}]};
+  locations.push(loc);
+  inp.value = '';
+  render();
+  setTimeout(() => {
+    const cards = document.querySelectorAll('.loc-card');
+    if (cards.length) cards[cards.length-1].scrollIntoView({behavior:'smooth',block:'start'});
+  }, 60);
+}
+function removeLocation(id) {
+  if (readOnly) return;
+  locations = locations.filter(l => l.id !== id);
+  render();
+}
+function renameLocation(id, name) {
+  const loc = locations.find(l => l.id === id);
+  if (loc) { loc.name = name; renderSummary(); }
+}
+
+// ── ITEMS ─────────────────────────────────────────────
+function addItem(locId) {
+  if (readOnly) return;
+  const loc = locations.find(l => l.id === locId);
+  if (!loc) return;
+  const itemId = nextId++;
+  loc.items.push({id:itemId, name:'', price:'', friendIds:[]});
+  loc.fees.forEach(fee => { if (!fee.itemIds.includes(itemId)) fee.itemIds.push(itemId); });
+  render();
+  setTimeout(() => { const inp = document.querySelector(`[data-iname="${itemId}"]`); if (inp) inp.focus(); }, 50);
+}
+function removeItem(locId, itemId) {
+  if (readOnly) return;
+  const loc = locations.find(l => l.id === locId);
+  if (!loc) return;
+  loc.items = loc.items.filter(i => i.id !== itemId);
+  loc.fees.forEach(fee => { fee.itemIds = fee.itemIds.filter(id => id !== itemId); });
+  render();
+}
+function updateItem(locId, itemId, field, value) {
+  const loc = locations.find(l => l.id === locId);
+  if (!loc) return;
+  const item = loc.items.find(i => i.id === itemId);
+  if (item) { item[field] = value; renderSummary(); }
+}
+function toggleFriendOnItem(locId, itemId, friendId, checked) {
+  const loc = locations.find(l => l.id === locId);
+  if (!loc) return;
+  const item = loc.items.find(i => i.id === itemId);
+  if (!item) return;
+  if (checked) { if (!item.friendIds.includes(friendId)) item.friendIds.push(friendId); }
+  else { item.friendIds = item.friendIds.filter(f => f !== friendId); }
+  renderSummary();
+}
+function selectAllFriends(locId, itemId) {
+  const loc = locations.find(l => l.id === locId);
+  if (!loc) return;
+  const item = loc.items.find(i => i.id === itemId);
+  if (!item) return;
+  const allSelected = friends.every(f => item.friendIds.includes(f.id));
+  item.friendIds = allSelected ? [] : friends.map(f => f.id);
+  render();
+}
+
+// ── FEES ──────────────────────────────────────────────
+function addFee(locId) {
+  if (readOnly) return;
+  const loc = locations.find(l => l.id === locId);
+  if (!loc) return;
+  loc.fees.push({id:nextId++, name:'', amount:'', isPercent:false, split:'prop', itemIds:loc.items.map(i=>i.id)});
+  render();
+}
+function removeFee(locId, feeId) {
+  if (readOnly) return;
+  const loc = locations.find(l => l.id === locId);
+  if (loc) { loc.fees = loc.fees.filter(f => f.id !== feeId); render(); }
+}
+function updateFee(locId, feeId, field, value) {
+  const loc = locations.find(l => l.id === locId);
+  if (!loc) return;
+  const fee = loc.fees.find(f => f.id === feeId);
+  if (fee) { fee[field] = value; renderSummary(); }
+}
+function toggleFeeItemApplies(locId, feeId, itemId, checked) {
+  const loc = locations.find(l => l.id === locId);
+  if (!loc) return;
+  const fee = loc.fees.find(f => f.id === feeId);
+  if (!fee) return;
+  if (checked) { if (!fee.itemIds.includes(itemId)) fee.itemIds.push(itemId); }
+  else { fee.itemIds = fee.itemIds.filter(id => id !== itemId); }
+  renderSummary();
+}
+function toggleAllFeeItems(locId, feeId) {
+  const loc = locations.find(l => l.id === locId);
+  if (!loc) return;
+  const fee = loc.fees.find(f => f.id === feeId);
+  if (!fee) return;
+  const allChecked = loc.items.every(i => fee.itemIds.includes(i.id));
+  fee.itemIds = allChecked ? [] : loc.items.map(i => i.id);
+  render();
+}
+
+// ── MATH ──────────────────────────────────────────────
+function parseNum(v) { return parseFloat(String(v).replace(/[^0-9.]/g,'')) || 0; }
+function fmt(n) { return '$' + n.toFixed(2); }
+
+function calcSplit() {
+  const result = {};
+  friends.forEach(f => { result[f.id] = {locs:{}, total:0}; });
+
+  locations.forEach(loc => {
+    const locSubtotals = {};
+    friends.forEach(f => { locSubtotals[f.id] = 0; });
+
+    loc.items.forEach(item => {
+      const price = parseNum(item.price);
+      const n = item.friendIds.length;
+      if (n === 0) return;
+      const share = price / n;
+      item.friendIds.forEach(fid => {
+        if (!result[fid]) return;
+        if (!result[fid].locs[loc.id]) result[fid].locs[loc.id] = {locName:loc.name, locEmoji:loc.emoji||'📍', items:[], fees:[]};
+        result[fid].locs[loc.id].items.push({name:item.name||'(unnamed)', share, splitCount:n});
+        result[fid].total += share;
+        locSubtotals[fid] += share;
+      });
+    });
+
+    loc.fees.forEach(fee => {
+      const applicableItems = loc.items.filter(i => fee.itemIds.includes(i.id));
+      const applicableBase = applicableItems.reduce((s,i) => s + parseNum(i.price), 0);
+      const feeAmt = fee.isPercent ? (parseNum(fee.amount)/100) * applicableBase : parseNum(fee.amount);
+      if (feeAmt === 0) return;
+
+      const applicableSubtotals = {};
+      friends.forEach(f => { applicableSubtotals[f.id] = 0; });
+      const participantSet = new Set();
+      applicableItems.forEach(item => {
+        const price = parseNum(item.price);
+        const n = item.friendIds.length;
+        if (n === 0) return;
+        item.friendIds.forEach(fid => { applicableSubtotals[fid] += price/n; participantSet.add(fid); });
+      });
+      const applicableTotal = Object.values(applicableSubtotals).reduce((a,b)=>a+b,0);
+      const splitGroup = participantSet.size > 0 ? [...participantSet] : friends.map(f=>f.id);
+
+      friends.forEach(f => {
+        let share;
+        if (fee.split === 'equal') {
+          share = splitGroup.includes(f.id) ? feeAmt / splitGroup.length : 0;
+        } else {
+          share = applicableTotal > 0 ? (applicableSubtotals[f.id] / applicableTotal) * feeAmt : 0;
+        }
+        if (share === 0) return;
+        if (!result[f.id].locs[loc.id]) result[f.id].locs[loc.id] = {locName:loc.name, locEmoji:loc.emoji||'📍', items:[], fees:[]};
+        result[f.id].locs[loc.id].fees.push({name:fee.name||'(fee)', share, split:fee.split});
+        result[f.id].total += share;
+      });
+    });
+  });
+  return result;
+}
+
+// ── SHARE LINK ────────────────────────────────────────
+function shareLink() {
+  const data = {friends, locations};
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  const url = location.href.split('?')[0] + '?bill=' + encoded;
+  navigator.clipboard.writeText(url).then(() => toast('🔗 link copied!')).catch(() => {
+    prompt('Copy this link:', url);
+  });
+}
+
+function loadFromURL() {
+  const params = new URLSearchParams(location.search);
+  const bill = params.get('bill');
+  if (!bill) return;
+  try {
+    const data = JSON.parse(decodeURIComponent(escape(atob(bill))));
+    friends = data.friends || [];
+    locations = data.locations || [];
+    // figure out next safe id
+    let maxId = 0;
+    friends.forEach(f => { if (f.id > maxId) maxId = f.id; });
+    locations.forEach(loc => {
+      if (loc.id > maxId) maxId = loc.id;
+      loc.items.forEach(i => { if (i.id > maxId) maxId = i.id; });
+      loc.fees.forEach(f => { if (f.id > maxId) maxId = f.id; });
+    });
+    nextId = maxId + 1;
+    readOnly = true;
+    document.getElementById('readonly-banner').style.display = 'block';
+    document.getElementById('friend-add-row').style.display = 'none';
+    document.getElementById('add-loc-panel').style.display = 'none';
+    render();
+  } catch(e) {
+    toast('⚠️ could not load shared bill');
+  }
+}
+
+// ── EXPORT CSV ────────────────────────────────────────
+function exportCSV() {
+  const split = calcSplit();
+  const rows = [['Person', 'Location', 'Item / Fee', 'Type', 'Amount']];
+  friends.forEach(f => {
+    const p = split[f.id];
+    if (!p) return;
+    Object.values(p.locs).forEach(ld => {
+      ld.items.forEach(i => rows.push([f.name, ld.locName, i.name, 'item', i.share.toFixed(2)]));
+      ld.fees.forEach(fee => rows.push([f.name, ld.locName, fee.name, 'fee', fee.share.toFixed(2)]));
+    });
+    rows.push([f.name, '', 'TOTAL', '', p.total.toFixed(2)]);
+    rows.push([]);
+  });
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'bill-split.csv';
+  a.click();
+  toast('⬇ CSV downloaded!');
+}
+
+// ── COPY SUMMARIES ────────────────────────────────────
+function copyShort() {
+  const split = calcSplit();
+  const lines = friends.map(f => {
+    const p = split[f.id];
+    return `${f.name}: ${fmt(p ? p.total : 0)}`;
+  });
+  navigator.clipboard.writeText(lines.join('\n')).then(() => toast('📋 copied!')).catch(() => toast('⚠️ could not copy'));
+}
+
+function copyDetailed() {
+  const split = calcSplit();
+  const sections = friends.map(f => {
+    const p = split[f.id];
+    if (!p) return `${f.name}: $0.00`;
+    let lines = [`${f.name}'s bill`];
+    Object.values(p.locs).forEach(ld => {
+      lines.push(`\n${ld.locEmoji} ${ld.locName}`);
+      ld.items.forEach(i => lines.push(`  ${i.name}: ${fmt(i.share)}${i.splitCount > 1 ? ` (÷${i.splitCount})` : ''}`));
+      ld.fees.forEach(fee => lines.push(`  ${fee.name}: ${fmt(fee.share)}`));
+    });
+    lines.push(`\nTotal: ${fmt(p.total)}`);
+    return lines.join('\n');
+  });
+  navigator.clipboard.writeText(sections.join('\n\n---\n\n')).then(() => toast('📋 detailed summary copied!')).catch(() => toast('⚠️ could not copy'));
+}
+
+// ── RENDER ────────────────────────────────────────────
+function render() { renderFriends(); renderLocations(); renderSummary(); }
+
+function renderFriends() {
+  const el = document.getElementById('friends-list');
+  el.innerHTML = friends.length
+    ? friends.map(f => `<div class="friend-chip">${esc(f.name)}${readOnly?'':'<span class="remove" onclick="removeFriend('+f.id+')">✕</span>'}</div>`).join('')
+    : '<span class="empty">no people yet</span>';
+}
+
+function renderLocations() {
+  const el = document.getElementById('locations-container');
+  el.innerHTML = locations.map(loc => {
+    const emoji = loc.emoji || '📍';
+    const itemRows = loc.items.length === 0
+      ? `<tr><td colspan="4" class="empty" style="padding:0.4rem 0.35rem;">no items yet</td></tr>`
+      : loc.items.map(item => `<tr>
+          <td><input class="item-name-input" type="text" placeholder="item name" value="${esc(item.name)}"
+            data-iname="${item.id}" oninput="updateItem(${loc.id},${item.id},'name',this.value)" ${readOnly?'disabled':''}/></td>
+          <td><div style="display:flex;align-items:center;gap:2px;">
+            <span style="color:var(--muted);font-size:0.8rem;">$</span>
+            <input class="item-price-input" type="number" min="0" step="0.01" placeholder="0.00"
+              value="${item.price}" oninput="updateItem(${loc.id},${item.id},'price',this.value)" ${readOnly?'disabled':''}/>
+          </div></td>
+          <td><div class="friend-checks">
+            ${friends.map(f => `<label class="friend-check">
+              <input type="checkbox" ${item.friendIds.includes(f.id)?'checked':''}
+                onchange="toggleFriendOnItem(${loc.id},${item.id},${f.id},this.checked)" ${readOnly?'disabled':''}/>
+              ${esc(f.name)}</label>`).join('')}
+            ${(!readOnly && friends.length>1)?`<button class="select-all-btn" onclick="selectAllFriends(${loc.id},${item.id})">${friends.every(f=>item.friendIds.includes(f.id))?'none':'all'}</button>`:''}
+          </div></td>
+          <td>${readOnly?'':'<button class="btn-danger" onclick="removeItem('+loc.id+','+item.id+')">✕</button>'}</td>
+        </tr>`).join('');
+
+    const feeCards = loc.fees.length === 0
+      ? `<p class="empty">no fees yet</p>`
+      : loc.fees.map(fee => {
+          const allChecked = loc.items.length > 0 && loc.items.every(i => fee.itemIds.includes(i.id));
+          const appliesSection = loc.items.length === 0 ? '' : `
+            <div class="fee-applies">
+              <span class="fee-applies-label">applies to:</span>
+              ${loc.items.map(item => `<label class="fee-item-check">
+                <input type="checkbox" ${fee.itemIds.includes(item.id)?'checked':''}
+                  onchange="toggleFeeItemApplies(${loc.id},${fee.id},${item.id},this.checked)" ${readOnly?'disabled':''}/>
+                ${esc(item.name||'(unnamed)')}</label>`).join('')}
+              ${(!readOnly && loc.items.length>1)?`<button class="applies-all-btn" onclick="toggleAllFeeItems(${loc.id},${fee.id})">${allChecked?'none':'all'}</button>`:''}
+            </div>`;
+          return `<div class="fee-card">
+            <div class="fee-main">
+              <input type="text" placeholder="e.g. tax, tip, delivery" value="${esc(fee.name)}"
+                oninput="updateFee(${loc.id},${fee.id},'name',this.value)" ${readOnly?'disabled':''}/>
+              <div style="display:flex;align-items:center;gap:2px;">
+                <span style="color:var(--muted);font-size:0.8rem;">${fee.isPercent?'%':'$'}</span>
+                <input type="number" min="0" step="0.01" placeholder="0" value="${fee.amount}"
+                  oninput="updateFee(${loc.id},${fee.id},'amount',this.value)" style="width:58px;" ${readOnly?'disabled':''}/>
+              </div>
+              <select onchange="updateFee(${loc.id},${fee.id},'isPercent',this.value==='true');render()" ${readOnly?'disabled':''}>
+                <option value="false" ${!fee.isPercent?'selected':''}>flat amount ($)</option>
+                <option value="true"  ${fee.isPercent?'selected':''}>percentage (%)</option>
+              </select>
+              <select onchange="updateFee(${loc.id},${fee.id},'split',this.value);renderSummary()" ${readOnly?'disabled':''}>
+                <option value="equal" ${fee.split==='equal'?'selected':''}>split equally</option>
+                <option value="prop"  ${fee.split==='prop'?'selected':''}>proportional</option>
+              </select>
+              ${readOnly?'':'<button class="btn-danger" onclick="removeFee('+loc.id+','+fee.id+')">✕</button>'}
+            </div>
+            ${appliesSection}
+          </div>`;
+        }).join('');
+
+    return `<div class="loc-card">
+      <div class="loc-header">
+        <div style="display:flex;align-items:center;gap:0.4rem;">
+          <div class="emoji-wrap" id="ewrap-${loc.id}">
+            <button class="emoji-btn" onclick="toggleEmojiPicker(${loc.id})" title="choose emoji">${emoji}</button>
+          </div>
+          <input class="loc-name-input" type="text" value="${esc(loc.name)}" oninput="renameLocation(${loc.id},this.value)" ${readOnly?'disabled':''}/>
+        </div>
+        ${readOnly?'':'<button class="btn-danger" onclick="removeLocation('+loc.id+')">remove</button>'}
+      </div>
+      <div class="loc-body">
+        <div class="loc-section">
+          <div class="loc-section-label">items</div>
+          <div class="overflow-x">
+            <table class="items-table">
+              <thead><tr><th>item</th><th>price</th><th>split between</th><th></th></tr></thead>
+              <tbody>${itemRows}</tbody>
+            </table>
+          </div>
+          ${readOnly?'':'<button class="btn-ghost btn-sm" style="margin-top:0.35rem;" onclick="addItem('+loc.id+')">+ add item</button>'}
+        </div>
+        <div class="loc-section" style="margin-bottom:0;">
+          <div class="loc-section-label">fees</div>
+          ${feeCards}
+          ${readOnly?'':'<button class="btn-ghost btn-sm" style="margin-top:0.35rem;" onclick="addFee('+loc.id+')">+ add fee</button>'}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSummary() {
+  const el = document.getElementById('summary-content');
+  const bar = document.getElementById('action-bar');
+
+  if (!friends.length || !locations.length) {
+    el.innerHTML = '<p class="empty">add people and a location to get started</p>';
+    bar.style.display = 'none';
+    return;
+  }
+  bar.style.display = 'flex';
+
+  const split = calcSplit();
+  const grandTotal = Object.values(split).reduce((s,p)=>s+p.total,0);
+  const itemSubtotal = locations.reduce((s,loc)=>s+loc.items.reduce((ss,i)=>ss+parseNum(i.price),0),0);
+
+  let html = `<div class="subtotal-bar"><span>items subtotal</span><span>${fmt(itemSubtotal)}</span></div>`;
+  friends.forEach(f => {
+    const p = split[f.id];
+    if (!p) return;
+    html += `<div class="person-block">
+      <div class="person-name">
+        <span>${esc(f.name)}</span>
+      </div>`;
+    const locEntries = Object.values(p.locs);
+    if (!locEntries.length) {
+      html += `<div class="person-line" style="font-style:italic;font-size:0.78rem;">no items assigned</div>`;
+    } else {
+      locEntries.forEach(ld => {
+        html += `<div class="person-line loc-heading">${esc(ld.locEmoji)} ${esc(ld.locName)}</div>`;
+        ld.items.forEach(i => html += `<div class="person-line indent">
+          <span>${esc(i.name)}<span class="split-count">${i.splitCount > 1 ? `÷${i.splitCount}` : ''}</span></span>
+          <span>${fmt(i.share)}</span></div>`);
+        ld.fees.forEach(fee => html += `<div class="person-line indent" style="color:var(--accent2);">
+          <span>${esc(fee.name)} <span style="font-size:0.69rem;">(${fee.split==='equal'?'equally':'proportional'})</span></span>
+          <span>${fmt(fee.share)}</span></div>`);
+      });
+    }
+    html += `<div class="person-total"><span>total</span><span>${fmt(p.total)}</span></div></div>`;
+  });
+  html += `<div class="grand-total"><span>grand total</span><span>${fmt(grandTotal)}</span></div>`;
+  el.innerHTML = html;
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── CLEAR ALL ─────────────────────────────────────────
+function showClearDialog() { document.getElementById('clear-dialog').style.display = 'flex'; }
+function hideClearDialog() { document.getElementById('clear-dialog').style.display = 'none'; }
+function clearAll() {
+  friends = []; locations = []; nextId = 1;
+  hideClearDialog();
+  render();
+  toast('🗑 cleared!');
+}
+
+loadFromURL();
+if (!readOnly) {
+  const itemId = nextId++;
+  locations.push({id:nextId++, name:'', emoji:'🍽️', items:[{id:itemId, name:'', price:'', friendIds:[]}], fees:[{id:nextId++, name:'', amount:'', isPercent:false, split:'prop', itemIds:[itemId]}]});
+}
+render();
+</script>
+<script src="../hearts.js"></script>
+</body>
+</html>
