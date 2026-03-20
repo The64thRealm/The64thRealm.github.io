@@ -128,7 +128,7 @@ button:active{transform:scale(0.97);}
 
 <div id="readonly-banner" style="display:none;max-width:1100px;margin:0 auto 1rem;">
   <div class="readonly-banner">
-    👁️ <strong>viewing a shared bill</strong> — this is read-only. <a href="?" style="color:var(--accent);">start your own</a>
+    👁️ <strong>viewing a shared bill</strong> — <a href="#" onclick="disableReadOnly()" style="color:var(--accent);">edit</a> &nbsp;·&nbsp; <a href="?" style="color:var(--accent);">start your own</a>
   </div>
 </div>
 
@@ -443,12 +443,16 @@ function loadFromURL() {
     nextId = maxId + 1;
     readOnly = true;
     document.getElementById('readonly-banner').style.display = 'block';
-    document.getElementById('friend-add-row').style.display = 'none';
-    document.getElementById('add-loc-panel').style.display = 'none';
     render();
   } catch(e) {
     toast('⚠️ could not load shared bill');
   }
+}
+
+function disableReadOnly() {
+  readOnly = false;
+  document.getElementById('readonly-banner').style.display = 'none';
+  render();
 }
 
 // ── EXPORT CSV ────────────────────────────────────────
