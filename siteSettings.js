@@ -16,7 +16,7 @@ const SITE_STATUS = "1.15 aassg filter maybe"
 
 const SITE_PAGES = [
   {
-    href: "billSplitter/billsplitter.html",
+    href: "billSplitter/",
     emoji: "💸",
     name: "bill splitter",
     desc: "split your bills easily"
